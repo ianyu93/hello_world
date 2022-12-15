@@ -36,17 +36,19 @@ class PathType:
             if self.val_type != ValType.FILE or not self.stdio_ok:
                 raise ArgumentError("Standard input/output (-) not allowed")
             return value
-        
+
         if self.exists is None:
             return value
-        
+
         if self.exists is True:
             if not os.path.exists(value):
                 raise ArgumentError(f"Path does not exist: {value}")
             if not self.valid_type(value):
-                raise ArgumentError(f"Path has to of of type {self.val_type.name if not callable(self.val_type) else 'custom'}")
+                raise ArgumentError(
+                    f"Path has to of of type {'custom' if callable(self.val_type) else self.val_type.name}"
+                )
             return value
-        
+
         if self.exists is False:
             if os.path.exists(value):
                 raise ArgumentError(f"Path already exists: {value}")
@@ -56,6 +58,5 @@ class PathType:
         if self.val_type == ValType.ANY: return True
         if self.val_type == ValType.FILE and os.path.isfile(value): return True
         if self.val_type == ValType.DIR and os.path.isdir(value): return True
-        if callable(self.val_type) and self.val_type(value): return True
-        return False
+        return bool(callable(self.val_type) and self.val_type(value))
         
