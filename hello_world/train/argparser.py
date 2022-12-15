@@ -14,8 +14,7 @@ class InvalidCLIArgumentError(ValueError):
     pass
 
 def validate_args(args):
-    if False:
-        raise InvalidCLIArgumentError("No bueno")
+    pass
 
 def parse_args():
     global DEFAULT_DESC
